@@ -3,7 +3,8 @@ from employees.models import Employee, Department, Position
 
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = [field.attname for field in Employee._meta.fields]
+    list_display = ('first_name', 'last_name', 'patronymic', 'birth_date', 'email', 'phone',
+                    'work_start_date', 'work_end_date', 'position', 'department', )
     list_filter = ('department', 'work_start_date',)
 
 
