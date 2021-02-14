@@ -47,7 +47,9 @@
                 </tbody>
             </table>
         </div>
-        {% include 'inc/_pagination.html' %}
+{% if page_obj.has_other_pages %}
+{% include 'inc/_pagination.html' %}
+{% endif %}
     </div>
 </div>
 {% endblock %}
