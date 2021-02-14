@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Список работников
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+
+{% for object in page.object_list %}
+...
+{% endfor %}
+
+<div class="pagination">
+    Browse by title:
+    {% for p in page.paginator.pages %}
+
+      {% if p == page %}
+          <span class="selected">{{ page }}</span>
+      {% else %}
+          <a href="?page={{ page.number }}">
+              {{ page }}
+          </a>
+      {% endif %}
+
+    {% endfor %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Список работников
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-2">
+        <div class="list-group">
+            <h5> Фильтр по отделам: </h5>
+            {% for department in departments %}
+                <a href="{% url 'employees_by_department' department.pk %}" class="list-group-item list-group-item-action>">
+                    {{ department.department_title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-10">
+    <div class="row row-cols-1 row-cols-md-1">
+        <table class="table table-sm">
+            <thead class="thead-dark">
+                <tr>
+                   <th scope="col">Имя</th>
+                   <th scope="col">Фамилия</th>
+                     <th scope="col">Отчество</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">Отдел</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for employee in page_obj %}
+                    <tr>
+                        <td>{{ employee.first_name}}</td>
+                        <td>{{ employee.last_name}}</td>
+                        <td>{{ employee.patronymic}}</td>
+                        <td>{{ employee.position}}</td>
+                        <td>{{ employee.department}}</td>
+                        <td><a href="{{ employee.get_absolute_url }}">Подробнее</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+    </div>
+
+{% include 'inc/_pagination.html' %}
+
+</div>
+{% endblock %}

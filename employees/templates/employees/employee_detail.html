@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Страница работника
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+
+
+<div class="col-sm">
+    <p><span class=""><b>Имя</b></span>: {{ employee.first_name }}</p>
+    <p><span class="underline"><b>Дата рождения</b></span>: {{ employee.birth_date }}</p>
+    <p><span class="underline"><b>Дата начала работы</b></span>: {{ employee.work_start_date }}</p>
+    {% if employee.work_end_date %}
+        <p><span class="underline"><b>Дата окончания работы</b></span>: {{ employee.work_end_date }}</p>
+    {% else %}
+        <p><span class="underline"><b>Дата окончания работы</b></span>: Работает сейчас </p>
+    {% endif %}
+</div>
+
+<div class="col-sm">
+    <p><span class="underline"><b>Фамилия</b></span>: {{ employee.last_name }}</p>
+    <p><span class="underline"><b>Номер телефона</b></span>: {{ employee.phone }}</p>
+    <p><span class="underline"><b>Должность</b></span>: {{ employee.position }}</p>
+</div>
+
+<div class="col-sm">
+    <p><span class="underline"><b>Отчество</b></span>: {{ employee.patronymic }}</p>
+    <p><span class="underline"><b>Email</b></span>: {{ employee.email }}</p>
+    <p><span class="underline"><b>Отдел</b></span>: {{ employee.department }}</p>
+</div>
+
+{% endblock %}
