@@ -10,24 +10,57 @@
 
 {% block content %}
 
-{% for object in page.object_list %}
-...
-{% endfor %}
 
-<div class="pagination">
-    Browse by title:
-    {% for p in page.paginator.pages %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
 
-      {% if p == page %}
-          <span class="selected">{{ page }}</span>
-      {% else %}
-          <a href="?page={{ page.number }}">
-              {{ page }}
-          </a>
-      {% endif %}
+            {% for i in paginator_pages %}
+            {% if page_obj.number == i %}
+            <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                    {{ i }}
+                  </span>
+            </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i.number }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </ul>
+</nav>
 
-    {% endfor %}
-</div>
 
+
+<div class="row">
+    <div class="col-md-12">
+    <div class="row row-cols-1 row-cols-md-1">
+        <table class="table table-sm">
+            <thead class="thead-dark">
+                <tr>
+                   <th scope="col">Имя</th>
+                   <th scope="col">Фамилия</th>
+                     <th scope="col">Отчество</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">Отдел</th>
+                    <th scope="col">Работает с</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for employee in page.object_list %}
+                    <tr>
+                        <td>{{ employee.first_name}}</td>
+                        <td>{{ employee.last_name}}</td>
+                        <td>{{ employee.patronymic}}</td>
+                        <td>{{ employee.position}}</td>
+                        <td>{{ employee.department}}</td>
+                        <td>{{ employee.work_start_date}}</td>
+                        <td><a href="{{ employee.get_absolute_url }}">Подробнее</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+    </div>
 
 {% endblock %}

@@ -2,26 +2,30 @@
 {% load static %}
 
 {% block title %}
-Сотрудники отдела {{ department }}
+Фильтрация списка работников
 {% endblock %}
 
 {% block sidebar %}
 {% endblock %}
 
 {% block content %}
+<p>
 <div class="row">
-    <div class="col-md-2">
-        <div class="list-group" id="list-tab" role="tablist">
-            <h5> Фильтр по отделам: </h5>
-            {% for department in departments %}
-            <a href="{% url 'employees_by_department' department.pk %}" class="list-group-item list-group-item-action>">
-
-                {{ department.department_title }}</a>
-            {% endfor %}
+    <div class="col">
+        <div class="card card-body">
+            <form method="get">
+                {{ filter.form }}
+                <button class="btn btn-primary" type="submit">
+                    Искать
+                </button>
+            </form>
         </div>
     </div>
-    <div class="col-md-10">
-        <h3> Отдел: {{ department }} </h3>
+</div>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
         <div class="row row-cols-1 row-cols-md-1">
             <table class="table table-sm">
                 <thead class="thead-dark">
@@ -30,26 +34,27 @@
                     <th scope="col">Фамилия</th>
                     <th scope="col">Отчество</th>
                     <th scope="col">Должность</th>
+                    <th scope="col">Отдел</th>
+                    <th scope="col">Работает с</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {% for employee in employees %}
+                {% for employee in filter.qs %}
                 <tr>
                     <td>{{ employee.first_name}}</td>
                     <td>{{ employee.last_name}}</td>
                     <td>{{ employee.patronymic}}</td>
                     <td>{{ employee.position}}</td>
+                    <td>{{ employee.department}}</td>
+                    <td>{{ employee.work_start_date}}</td>
                     <td><a href="{{ employee.get_absolute_url }}">Подробнее</a></td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
-{% if page_obj.has_other_pages %}
-{% include 'inc/_pagination.html' %}
-{% endif %}
     </div>
 </div>
-{% endblock %}
+    {% endblock %}
