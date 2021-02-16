@@ -4,42 +4,24 @@ from django_filters.views import FilterView
 
 from .models import Employee
 from .services.pagination_alphabetically import NamePaginator
+from .services.pages_list_for_paginator import get_pages_list_for_paginator
 from .filters import EmployeeFilter
 
 
-class EmployeesListView(ListView):
+class EmployeesListView(FilterView, ListView):
+    model = Employee
+    filterset_class = EmployeeFilter
     template_name = 'employees/employee_list.html'
     paginate_by = 25
-    model = Employee
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        paginator = context.get('paginator')
-        num_pages = paginator.num_pages
-        current_page = context.get('page_obj')
-        page_no = current_page.number
-        if num_pages <= 11 or page_no <= 6:
-            pages = [x for x in range(1, min(num_pages + 1, 12))]
-        elif page_no > num_pages - 6:
-            pages = [x for x in range(num_pages - 10, num_pages + 1)]
-        else:
-            pages = [x for x in range(page_no - 5, page_no + 6)]
-        context.update({'pages': pages})
+        context['pages'] = get_pages_list_for_paginator(context=context)
         return context
 
 
 class EmployeeDetailView(DetailView):
     model = Employee
-
-
-class EmployeeFilterView(FilterView):
-    template_name = 'employees/employee_filtration.html'
-    model = Employee
-    filter_class = EmployeeFilter
-    filterset_fields = {
-            'work_start_date': ['lt', 'gt'],
-            'department': ['exact'],
-        }
 
 
 class AlphabetPaginatorView(ListView):
@@ -48,7 +30,8 @@ class AlphabetPaginatorView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        paginator = NamePaginator(Employee.objects.all(), on="last_name", per_page=len(Employee.objects.all()) // 6)
+        objects = Employee.objects.all()
+        paginator = NamePaginator(objects, on='last_name', per_page=len(objects)//6)
         try:
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
@@ -58,5 +41,5 @@ class AlphabetPaginatorView(ListView):
         except:
             page = paginator.page(paginator.num_pages)
         context['page'] = page
-        context["paginator_pages"] = paginator.pages
+        context['paginator_pages'] = paginator.pages
         return context

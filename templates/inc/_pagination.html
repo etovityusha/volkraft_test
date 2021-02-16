@@ -1,24 +1,24 @@
+{% load tags %}
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-
         <li class="page-item">
-            <a class="page-link" href="?page=1">Первая</a>
+            <a class="page-link" href="?{% url_replace page=1 %}">Первая</a>
         </li>
-
-        {% for i in pages %}
-        {% if page_obj.number == i %}
-        <li class="page-item active" aria-current="page">
-                  <span class="page-link">
-                    {{ i }}
-                  </span>
-        </li>
-        {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+    {% for i in paginator.num_pages|times %}
+        {% if i in pages %}
+            {% if page_obj.number == i %}
+                <li class="page-item active" aria-current="page">
+                          <span class="page-link">
+                            {{ i }}
+                          </span>
+                </li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace page=i %}">{{ i }}</a></li>
+            {% endif %}
         {% endif %}
-        {% endfor %}
-
+    {% endfor %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" tabindex="-1" aria-disabled="true">Последняя</a>
+            <a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}" tabindex="-1" aria-disabled="true">Последняя</a>
         </li>
     </ul>
 </nav>
