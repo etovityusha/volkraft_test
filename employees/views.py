@@ -7,6 +7,8 @@ from .services.pagination_alphabetically import NamePaginator
 from .services.pages_list_for_paginator import get_pages_list_for_paginator
 from .filters import EmployeeFilter
 
+import math
+
 
 class EmployeesListView(FilterView, ListView):
     model = Employee
@@ -31,7 +33,7 @@ class AlphabetPaginatorView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         objects = Employee.objects.all()
-        paginator = NamePaginator(objects, on='last_name', per_page=len(objects)//6)
+        paginator = NamePaginator(objects, on='last_name', per_page=math.ceil(len(objects)/7))
         try:
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
