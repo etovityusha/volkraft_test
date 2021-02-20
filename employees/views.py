@@ -1,3 +1,4 @@
+from django.core.paginator import InvalidPage
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
@@ -30,17 +31,16 @@ class AlphabetPaginatorView(ListView):
     template_name = 'employees/alphabet_selectors.html'
     model = Employee
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        objects = Employee.objects.all()
-        paginator = NamePaginator(objects, on='last_name', per_page=math.ceil(len(objects)/7))
+        paginator = NamePaginator(self.object_list, on='last_name', per_page=math.ceil(len(self.object_list)/7))
         try:
             page = int(self.request.GET.get('page', '1'))
         except ValueError:
             page = 1
         try:
             page = paginator.page(page)
-        except:
+        except InvalidPage:
             page = paginator.page(paginator.num_pages)
         context['page'] = page
         context['paginator_pages'] = paginator.pages

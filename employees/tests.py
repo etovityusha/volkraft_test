@@ -20,15 +20,26 @@ class AlphabetPaginatorTest1(TestCase):
                 department=Department.objects.get(department_title='Разработка'),
             )
 
-    def test_response(self):
+    def test_default_page_response(self):
         response = self.client.get('/alphabet/')
         self.assertEqual(response.status_code, 200)
 
-    def test_context(self):
+    def test_default_page_context(self):
         response = self.client.get('/alphabet/')
+        print(response.context)
         self.assertEqual(
             list(map(str, response.context['paginator_pages'])),
             ['А-В', 'Г-Е', 'Ж-К', 'Л-Ц', 'Ч-Э', 'Ю-Я']
         )
         self.assertEqual(response.context['page'], response.context['paginator_pages'][0])
         self.assertLessEqual(len(response.context['paginator_pages']), 7)
+
+    def test_invalid_float_page_number(self):
+        response = self.client.get('/alphabet/?page=2.4')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], response.context['paginator_pages'][0])
+
+    def test_invalid_integer_page_number(self):
+        response = self.client.get('/alphabet/?page=300')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['page'], response.context['paginator_pages'][-1])
